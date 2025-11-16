@@ -1,0 +1,274 @@
+/* App Container */
+.container {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+}
+
+/* Phone Input Section */
+.phoneSection {
+    width: 100%;
+}
+
+.label {
+    display: block;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 0.5rem;
+}
+
+.required {
+    color: #ef4444;
+    padding: 0 0.5rem;
+}
+
+.phoneContainer {
+    position: relative;
+}
+
+.phoneInputWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    position: relative;
+}
+
+@media (min-width: 640px) {
+    .phoneInputWrapper {
+        flex-direction: row;
+        gap: 1rem;
+    }
+}
+
+@media (min-width: 1024px) {
+    .phoneInputWrapper {
+        gap: 1rem;
+    }
+}
+
+/* Country Selector Button */
+.countryButton {
+    position: relative;
+}
+
+.countryButtonInner {
+    padding: 0.75rem 1rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    outline: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 120px;
+    background: white;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.countryButtonInner:hover {
+    border-color: #9ca3af;
+}
+
+.countryButtonInner:focus {
+    border-color: transparent;
+    box-shadow: 0 0 0 2px var(--color-primary, rgba(147, 51, 234, 0.5));
+}
+
+.flagIcon {
+    width: 1.25rem;
+    height: 1.25rem;
+    font-size: 1.125rem;
+    font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif;
+    display: inline-block;
+    line-height: 1;
+}
+
+.flagSvg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.countryCode {
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.dropdownIcon {
+    width: 1rem;
+    height: 1rem;
+    color: #6b7280;
+    flex-shrink: 0;
+}
+
+/* Phone Input Field */
+.phoneInput {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    outline: none;
+    transition: all 0.2s;
+}
+
+.phoneInput:focus {
+    border-color: transparent;
+    box-shadow: 0 0 0 1px var(--color-primary, rgba(147, 51, 234));
+}
+
+.phoneInput::placeholder {
+    color: #9ca3af;
+}
+
+/* Search Input */
+.searchInput {
+    padding: 0.5rem 1rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    outline: none;
+    margin-bottom: 1rem;
+    width: 100%;
+    max-width: 400px;
+    transition: all 0.2s;
+}
+
+.searchInput:focus {
+    border-color: #9ca3af;
+    box-shadow: 0 0 0 1px var(--color-primary, rgba(147, 51, 234));
+}
+
+/* Error Message */
+.error {
+    color: #ef4444;
+    margin-top: 0.5rem;
+}
+
+/* Dropdown Menu */
+.dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    margin-top: 0.25rem;
+    width: 100%;
+    /* max-width: 20rem; */
+    background: white;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    z-index: 50;
+    max-height: 20rem;
+    overflow-y: auto;
+    min-width: 16rem;
+    border-top: 12px solid white;
+    border-bottom: 12px solid white;
+}
+
+/* @media (min-width: 1024px) {
+    .dropdown {
+        min-width: 26.25rem;
+    }
+} */
+
+/* Dropdown Search Header */
+.dropdownHeader {
+    padding: 0.75rem;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.dropdownSearchInput {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+    outline: none;
+    transition: all 0.2s;
+}
+
+.dropdownSearchInput:focus {
+    border-color: transparent;
+    box-shadow: 0 0 0 2px var(--color-primary, rgba(147, 51, 234, 0.5));
+}
+
+.dropdownSearchInput::placeholder {
+    color: #9ca3af;
+}
+
+/* Dropdown List Container */
+.dropdownList {
+    min-height: 10rem;
+    overflow-y: auto;
+}
+
+/* Country List Item */
+.countryItem {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    text-align: left;
+    background: white;
+    border: none;
+    border-bottom: 1px solid #f3f4f6;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    transition: background-color 0.15s;
+}
+
+.countryItem:hover {
+    background-color: #f9fafb;
+}
+
+.countryItem:last-child {
+    border-bottom: none;
+}
+
+.countryItemFlag {
+    width: 1.5rem;
+    white-space: nowrap;
+    font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif;
+    display: inline-block;
+    line-height: 1;
+    font-size: 1.5rem;
+}
+
+.countryItemContent {
+    flex: 1;
+    min-width: 0;
+}
+
+.countryItemTitle {
+    font-weight: 500;
+    color: #111827;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.countryItemDialCode {
+    font-size: 0.875rem;
+    color: #6b7280;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Loading Spinner */
+.loadingSpinner {
+    width: 1.25rem;
+    height: 1.25rem;
+    border: 2px solid #e5e7eb;
+    border-top-color: #9333ea;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    display: inline-block;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.phoneInputGroup {
+    width: 100%;
+}

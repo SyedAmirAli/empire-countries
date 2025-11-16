@@ -23,6 +23,8 @@ type GetAllOptions = {
 type SearchOptions = {
     search?: string;
     q?: string;
+    dialCode?: string;
+    countryCode?: CountryCode;
 };
 
 type GetOneOptions = {
@@ -129,20 +131,27 @@ export class Countries {
     }
 
     // for searching country data
-    public static search({ search, q }: SearchOptions = {}): Array<CountryType> {
-        return this.searchByRawString<Array<CountryType>>(countries, { search, q });
+    public static search(query: SearchOptions = {}): Array<CountryType> {
+        return this.searchByRawString<Array<CountryType>>(countries, query);
     }
 
-    public static searchMinimal({ search, q }: SearchOptions = {}): Array<CountryMinimal> {
-        return this.searchByRawString<Array<CountryMinimal>>(countriesMinimal, { search, q });
+    public static searchMinimal(query: SearchOptions = {}): Array<CountryMinimal> {
+        return this.searchByRawString<Array<CountryMinimal>>(countriesMinimal, query);
     }
 
     // helper function to search by raw string
     protected static searchByRawString<T extends Array<CountryType> | Array<CountryMinimal>>(
         data: T,
-        { search, q }: SearchOptions = {},
+        { search, q, dialCode: dialCodeSearch, countryCode }: SearchOptions = {},
     ): T {
         const searchQuery = String(search || q).toLowerCase();
+
+        if (dialCodeSearch) {
+            return data.filter((country) => country.dialCode === dialCodeSearch) as T;
+        }
+        if (countryCode) {
+            return data.filter((country) => country.code === countryCode) as T;
+        }
 
         return data.filter((country) => {
             const title = country.title.toLowerCase();
@@ -484,7 +493,7 @@ export class Countries {
     }
 
     // get my country data
-    public static async getMyCountry(): Promise<{ data: MyCountry | null; error?: string }> {
+    public static async findMyCountry(): Promise<{ data: MyCountry | null; error?: string }> {
         try {
             const response = await fetch('https://ipwho.is', { headers: { Accept: 'application/json' } });
             const data = (await response.json()) as MyCountry;
@@ -520,7 +529,7 @@ export default class Country extends Countries {
 
         // get my country data if callGetMyCountry is true
         if (callGetMyCountry) {
-            Countries.getMyCountry()
+            Countries.findMyCountry()
                 .then((myCountry) => {
                     if (this.selectedCountryCode) {
                         this.selectedCountry = Countries.getOne({
@@ -540,13 +549,14 @@ export default class Country extends Countries {
     // set my country data
     public async setMyCountry(): Promise<this> {
         try {
-            const myCountry = await Countries.getMyCountry();
+            const myCountry = await Countries.findMyCountry();
             this.myCountry = myCountry.data;
             this.myCountryError = myCountry.error || null;
+            this.selectedCountryCode = this.myCountry?.country_code || null;
 
             if (this.selectedCountryCode) {
                 this.selectedCountry = Countries.getOne({
-                    code: this.myCountry?.country_code || this.selectedCountryCode,
+                    code: this.selectedCountryCode,
                 });
             }
         } catch (error) {
@@ -557,7 +567,33 @@ export default class Country extends Countries {
     }
 
     public getSearchQuery(): string {
-        return this.search || this.q;
+        return String(this.search || this.q || '');
+    }
+
+    public setSelectedCountry(selectedCountry: CountryType): this {
+        this.selectedCountry = selectedCountry;
+        return this;
+    }
+
+    public setSelectedCountryCode(selectedCountryCode?: CountryCode | null): this {
+        if (!selectedCountryCode) return this;
+
+        this.selectedCountryCode = selectedCountryCode;
+        this.selectedCountry = Countries.getOne({ code: selectedCountryCode });
+        return this;
+    }
+
+    public setSelectedCountryByFind(query?: SearchOptions | string | null): this {
+        if (!query) return this;
+
+        if (typeof query === 'string') {
+            const result = Countries.search({ search: query });
+            this.selectedCountry = result?.[0] || null;
+        } else {
+            const result = Countries.search(query);
+            this.selectedCountry = result?.[0] || null;
+        }
+        return this;
     }
 
     public setLimit(limit: number): this {
