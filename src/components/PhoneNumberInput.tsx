@@ -3,11 +3,11 @@ import Country from '../map';
 import styles from '../App.module.css';
 import type { CountryCode } from '../data';
 
-export type PhoneNumberProps = { code?: CountryCode | string | null; number?: string | null };
+export type PhoneProps = { code?: CountryCode | string | null; number?: string | null };
 
 interface PhoneNumberInputProps {
-    phone?: PhoneNumberProps;
-    setPhone?: React.Dispatch<React.SetStateAction<PhoneNumberProps>>;
+    phone?: PhoneProps;
+    setPhone?: React.Dispatch<React.SetStateAction<PhoneProps>>;
 }
 const PhoneNumberInput: React.FC<PhoneNumberInputProps> = ({ phone, setPhone }) => {
     const countryRef = React.useRef(new Country(null, true));
