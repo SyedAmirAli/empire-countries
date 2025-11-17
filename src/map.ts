@@ -11,7 +11,6 @@ import type {
     MyCountry,
     CountryCurrency,
     CountryName,
-    CountryNativeName,
     CountryNativeNames,
 } from './data/country';
 
@@ -56,7 +55,7 @@ type PaginationOptionsMinimal = {
     sortOrder?: 'asc' | 'desc';
 };
 
-type PaginationResult<T = CountryType | CountryMinimal> = {
+export type PaginationResult<T = CountryType | CountryMinimal> = {
     data: Array<T>;
     total: number;
     page: number;

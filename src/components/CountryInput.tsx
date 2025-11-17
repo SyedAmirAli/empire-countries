@@ -5,19 +5,17 @@ import type { CountryCode, Country as TCountry } from '../data';
 
 export type PhoneProps = { code?: CountryCode | string | null; number?: string | null };
 
-interface PhoneNumberInputProps {
+interface CountryInputProps {
     label?: string;
-    placeholder?: string;
-    phone?: PhoneProps;
-    setPhone?: React.Dispatch<React.SetStateAction<PhoneProps>>;
-    setSelectedCountry?: React.Dispatch<React.SetStateAction<TCountry | null>>;
     required?: string | null;
+    placeholder?: string;
+    selectedCountry?: Partial<TCountry> | null;
+    setSelectedCountry?: React.Dispatch<React.SetStateAction<Partial<TCountry> | null>>;
 }
-const PhoneNumberInput: React.FC<PhoneNumberInputProps> = ({
+const CountryInput: React.FC<CountryInputProps> = ({
     label,
     placeholder,
-    phone,
-    setPhone,
+    selectedCountry,
     setSelectedCountry,
     required = null,
 }) => {
@@ -34,11 +32,8 @@ const PhoneNumberInput: React.FC<PhoneNumberInputProps> = ({
             setIsLoading(true);
             try {
                 const myCountry = (await countryRef.current.setMyCountry()).getCountry();
-                if (setPhone) {
-                    setPhone({
-                        code: myCountry?.dialCode || null,
-                        number: null,
-                    });
+                if (setSelectedCountry) {
+                    setSelectedCountry(myCountry);
                 }
 
                 // set loading and error
@@ -69,34 +64,28 @@ const PhoneNumberInput: React.FC<PhoneNumberInputProps> = ({
         }
     }, [isDropdownOpen]);
 
-    const selectedCountry = countryRef.current.getCountry();
+    const getSelectedCountry = countryRef.current.getCountry();
 
     React.useEffect(() => {
-        if (setPhone) {
-            setPhone({
-                ...phone,
-                code: selectedCountry?.dialCode || null,
-            });
-        }
         if (setSelectedCountry) {
-            setSelectedCountry(selectedCountry);
+            setSelectedCountry(getSelectedCountry);
         }
-    }, [selectedCountry]);
+    }, [getSelectedCountry]);
 
     React.useEffect(() => {
-        if (phone?.code) {
-            countryRef.current.setSelectedCountryByFind({ dialCode: phone.code });
+        if (getSelectedCountry?.code) {
+            countryRef.current.setSelectedCountryCode(getSelectedCountry.code);
             setIsLoading(false);
         }
-    }, [phone]);
+    }, [getSelectedCountry]);
 
     return (
-        <div className={styles.phoneSection}>
+        <div className={styles.countrySection}>
             <label htmlFor="phone" className={styles.label}>
-                {label || 'Phone number'}{' '}
+                {label || 'Country'}{' '}
                 {required !== undefined && <span className={styles.required}>{error || required || '*'}</span>}
             </label>
-            <div className={styles.phoneContainer}>
+            <div className={styles.countryContainer}>
                 <div className={styles.phoneInputWrapper} ref={dropdownRef}>
                     <div className={styles.countryButton}>
                         <button
@@ -111,73 +100,66 @@ const PhoneNumberInput: React.FC<PhoneNumberInputProps> = ({
                                 countryRef.current.setSearch('');
                             }}
                         >
-                            <i className={styles.flagIcon}>
-                                {selectedCountry ? (
-                                    <span
-                                        className={styles.flagIcon}
-                                        dangerouslySetInnerHTML={{ __html: selectedCountry.flag }}
-                                    />
-                                ) : isLoading ? (
-                                    <span className={styles.loadingSpinner}></span>
-                                ) : (
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        width="24"
-                                        height="24"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        strokeWidth="2"
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', width: '100%' }}>
+                                <i className={styles.flagIcon}>
+                                    {selectedCountry ? (
+                                        <span
+                                            className={styles.flagIcon}
+                                            dangerouslySetInnerHTML={{ __html: selectedCountry?.flag || '' }}
+                                        />
+                                    ) : isLoading ? (
+                                        <span className={styles.loadingSpinner}></span>
+                                    ) : (
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            width="24"
+                                            height="24"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            strokeWidth="2"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            className="lucide lucide-earth-icon lucide-earth"
+                                        >
+                                            <path d="M21.54 15H17a2 2 0 0 0-2 2v4.54" />
+                                            <path d="M7 3.34V5a3 3 0 0 0 3 3a2 2 0 0 1 2 2c0 1.1.9 2 2 2a2 2 0 0 0 2-2c0-1.1.9-2 2-2h3.17" />
+                                            <path d="M11 21.95V18a2 2 0 0 0-2-2a2 2 0 0 1-2-2v-1a2 2 0 0 0-2-2H2.05" />
+                                            <circle cx="12" cy="12" r="10" />
+                                        </svg>
+                                    )}
+                                </i>
+                                <span className={styles.countryCode}>
+                                    ({selectedCountry ? selectedCountry.code : 'XX'})
+                                </span>
+
+                                <span className={styles.countryName}>
+                                    {selectedCountry
+                                        ? `${selectedCountry.title} - ${selectedCountry.nativeNames?.[0]?.official}`
+                                        : placeholder}
+                                </span>
+                            </div>
+                            <div>
+                                <svg
+                                    className={styles.dropdownIcon}
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                    style={{
+                                        transform: isDropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                                        transition: 'transform 0.2s',
+                                    }}
+                                >
+                                    <path
                                         strokeLinecap="round"
                                         strokeLinejoin="round"
-                                        className="lucide lucide-earth-icon lucide-earth"
-                                    >
-                                        <path d="M21.54 15H17a2 2 0 0 0-2 2v4.54" />
-                                        <path d="M7 3.34V5a3 3 0 0 0 3 3a2 2 0 0 1 2 2c0 1.1.9 2 2 2a2 2 0 0 0 2-2c0-1.1.9-2 2-2h3.17" />
-                                        <path d="M11 21.95V18a2 2 0 0 0-2-2a2 2 0 0 1-2-2v-1a2 2 0 0 0-2-2H2.05" />
-                                        <circle cx="12" cy="12" r="10" />
-                                    </svg>
-                                )}
-                            </i>
-                            <span className={styles.countryCode}>
-                                {selectedCountry ? selectedCountry.dialCode : '+000'}
-                            </span>
-                            <svg
-                                className={styles.dropdownIcon}
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                                style={{
-                                    transform: isDropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)',
-                                    transition: 'transform 0.2s',
-                                }}
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth="2"
-                                    d="M19 9l-7 7-7-7"
-                                ></path>
-                            </svg>
+                                        strokeWidth="2"
+                                        d="M19 9l-7 7-7-7"
+                                    ></path>
+                                </svg>
+                            </div>
                         </button>
                     </div>
-
-                    <input
-                        type="tel"
-                        id="phone"
-                        placeholder={placeholder || 'Enter phone number'}
-                        required
-                        className={styles.phoneInput}
-                        value={phone?.number || ''}
-                        onChange={(e) => {
-                            if (setPhone) {
-                                setPhone({
-                                    ...phone,
-                                    number: e.target.value,
-                                });
-                            }
-                        }}
-                    />
 
                     {/* Dropdown */}
                     {isDropdownOpen && (
@@ -227,4 +209,4 @@ const PhoneNumberInput: React.FC<PhoneNumberInputProps> = ({
     );
 };
 
-export default PhoneNumberInput;
+export default CountryInput;

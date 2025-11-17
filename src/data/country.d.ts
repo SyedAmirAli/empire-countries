@@ -39,6 +39,8 @@ export type CountryMinimal = Pick<
     | 'unicode'
 >;
 
+export type CountryType = Country;
+export type CountryMinimalType = CountryMinimal;
 export type CountryKeys = keyof Country;
 export type CountryMinimalKeys = keyof CountryMinimal;
 

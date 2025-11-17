@@ -9,6 +9,10 @@
     width: 100%;
 }
 
+.countrySection {
+    width: 100%;
+}
+
 .label {
     display: block;
     font-size: 1rem;
@@ -24,6 +28,11 @@
 
 .phoneContainer {
     position: relative;
+}
+
+.countryContainer {
+    position: relative;
+    width: 100%;
 }
 
 .phoneInputWrapper {
@@ -49,6 +58,20 @@
 /* Country Selector Button */
 .countryButton {
     position: relative;
+}
+
+.countryContainer .countryButton {
+    width: 100%;
+}
+
+.countryContainer .countryName {
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.countryContainer .countryCode {
+    font-size: 1rem;
+    font-weight: 600;
 }
 
 .countryButtonInner {
@@ -101,6 +124,14 @@
     flex-shrink: 0;
 }
 
+.countryButtonContent {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+    justify-content: space-between;
+}
+
 /* Phone Input Field */
 .phoneInput {
     flex: 1;
@@ -109,6 +140,7 @@
     border-radius: 0.5rem;
     outline: none;
     transition: all 0.2s;
+    font-size: 1rem;
 }
 
 .phoneInput:focus {
@@ -272,3 +304,15 @@
 .phoneInputGroup {
     width: 100%;
 }
+
+.countryContainer .countryButtonInner {
+    width: 100%;
+}
+
+/* .countryButtonContent {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+    justify-content: space-between;
+} */
